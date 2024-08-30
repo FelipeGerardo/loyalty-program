@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.c336aad7.css","mappings":"AAAA,KAEE,6BAAiC,CADjC,QAEF,CAEA,KACE,YACF","sources":["styles.css"],"sourcesContent":["body {\r\n  margin: 0;\r\n  font-family: 'Roboto', sans-serif; /* Usualmente en Material-UI */\r\n}\r\n  \r\nmain {\r\n  padding: 20px;\r\n}\r\n"],"names":[],"sourceRoot":""}
