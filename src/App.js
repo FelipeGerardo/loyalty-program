@@ -9,6 +9,7 @@ function App() {
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [open, setOpen] = useState(false);
   const [isExistingClient, setIsExistingClient] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // Estado para editar la información
   const [docId, setDocId] = useState(null); // Guardar la referencia al documento del cliente existente
   const [formValues, setFormValues] = useState({
     phoneNumber: '',
@@ -42,7 +43,7 @@ function App() {
         lastName: clientData.apellidoPaterno,
         middleName: clientData.apellidoMaterno,
         email: clientData.correo,
-        visits: (parseInt(clientData.visitas) + 1).toString()
+        visits: clientData.visitas // No incrementa aquí
       });
       setIsExistingClient(true);
       setDocId(querySnapshot.docs[0].id); // Guardar el ID del documento para futuras actualizaciones
@@ -59,10 +60,13 @@ function App() {
       setIsExistingClient(false);
     }
     setOpen(true);
+    setPhoneNumber('');
+    setIsButtonEnabled(!isButtonEnabled);
   };
 
   const handleModalClose = () => {
     setOpen(false);
+    setIsEditing(false); // Restablecer el estado de edición al cerrar el modal
   };
 
   const handleInputChange = (event) => {
@@ -73,16 +77,32 @@ function App() {
     }));
   };
 
+  const handleEditInfo = () => {
+    setIsEditing(true);
+  };
+
   const saveData = async () => {
     const clientesRef = collection(db, "clientes");
 
     if (isExistingClient) {
-      // Actualizar visitas del cliente existente
-      const docRef = doc(db, "clientes", docId); // Referencia del documento usando el ID guardado
-      await updateDoc(docRef, {
-        visitas: formValues.visits
-      });
-      alert("Visita actualizada :D");
+      if (!isEditing) {
+        // Solo actualiza las visitas cuando se presiona "Actualizar Visita"
+        const docRef = doc(db, "clientes", docId); // Referencia del documento usando el ID guardado
+        await updateDoc(docRef, {
+          visitas: (parseInt(formValues.visits) + 1).toString() // Incrementar visitas
+        });
+        alert("Visita actualizada :D");
+      } else {
+        // Actualizar la información del cliente existente
+        const docRef = doc(db, "clientes", docId); // Referencia del documento usando el ID guardado
+        await updateDoc(docRef, {
+          nombre: formValues.firstName,
+          apellidoPaterno: formValues.lastName,
+          apellidoMaterno: formValues.middleName,
+          correo: formValues.email
+        });
+        alert("Información actualizada :D");
+      }
     } else {
       // Agregar nuevo cliente
       await addDoc(clientesRef, {
@@ -122,7 +142,7 @@ function App() {
 
       {/* Modal */}
       <Dialog open={open} onClose={handleModalClose}>
-        <DialogTitle>{isExistingClient ? "Actualizar Visita" : "Registrar Cliente"}</DialogTitle>
+        <DialogTitle>{isExistingClient ? "Actualizar Información" : "Registrar Cliente"}</DialogTitle>
         <DialogContent>
           <TextField
             margin="dense"
@@ -142,7 +162,7 @@ function App() {
             fullWidth
             value={formValues.firstName}
             onChange={handleInputChange}
-            disabled={isExistingClient}
+            disabled={!isEditing && isExistingClient}
           />
           <TextField
             margin="dense"
@@ -152,7 +172,7 @@ function App() {
             fullWidth
             value={formValues.lastName}
             onChange={handleInputChange}
-            disabled={isExistingClient}
+            disabled={!isEditing && isExistingClient}
           />
           <TextField
             margin="dense"
@@ -162,7 +182,7 @@ function App() {
             fullWidth
             value={formValues.middleName}
             onChange={handleInputChange}
-            disabled={isExistingClient}
+            disabled={!isEditing && isExistingClient}
           />
           <TextField
             margin="dense"
@@ -172,7 +192,7 @@ function App() {
             fullWidth
             value={formValues.email}
             onChange={handleInputChange}
-            disabled={isExistingClient}
+            disabled={!isEditing && isExistingClient}
           />
           <TextField
             margin="dense"
@@ -181,16 +201,20 @@ function App() {
             type="number"
             fullWidth
             value={formValues.visits}
-            onChange={handleInputChange}
-            disabled={!isExistingClient} // Solo se puede modificar si es cliente existente
+            disabled // Campo siempre inactivo
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleModalClose} color="secondary">
             Cancelar
           </Button>
+          {isExistingClient && !isEditing && (
+            <Button onClick={handleEditInfo} color="secondary">
+              Editar Información
+            </Button>
+          )}
           <Button onClick={saveData} color="primary">
-            {isExistingClient ? "Actualizar" : "Guardar"}
+            {isExistingClient ? (isEditing ? "Actualizar Información" : "Actualizar Visita") : "Guardar"}
           </Button>
         </DialogActions>
       </Dialog>
