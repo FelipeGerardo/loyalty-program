@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/loyalty-program/static/css/main.c336aad7.css",
-    "main.js": "/loyalty-program/static/js/main.ddbf968c.js",
+    "main.js": "/loyalty-program/static/js/main.717fb80f.js",
     "index.html": "/loyalty-program/index.html",
     "main.c336aad7.css.map": "/loyalty-program/static/css/main.c336aad7.css.map",
-    "main.ddbf968c.js.map": "/loyalty-program/static/js/main.ddbf968c.js.map"
+    "main.717fb80f.js.map": "/loyalty-program/static/js/main.717fb80f.js.map"
   },
   "entrypoints": [
     "static/css/main.c336aad7.css",
-    "static/js/main.ddbf968c.js"
+    "static/js/main.717fb80f.js"
   ]
 }
