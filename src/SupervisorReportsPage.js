@@ -9,7 +9,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement,
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
 
-const SupervisorReports = () => {
+const SupervisorReportsPage = () => {
   const [records, setRecords] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [supervisorFilter, setSupervisorFilter] = useState('');
@@ -288,4 +288,4 @@ const SupervisorReports = () => {
   );
 };
 
-export default SupervisorReports;
+export default SupervisorReportsPage;
