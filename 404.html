@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Page Not Found</title>
-    <script>
-      // Redirect to index.html
-      var path = location.pathname;
-      if (path != "/" && !path.startsWith("/inicio") && !path.startsWith("/registros")) {
-        location.href = "/loyalty-program/";
-      }
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0; url=/loyalty-program" />
+    <script type="text/javascript">
+      // Preserva la ruta original al redirigir
+      var path = window.location.pathname;
+      var query = window.location.search;
+      var hash = window.location.hash;
+      window.location.href = "/loyalty-program" + path + query + hash;
     </script>
   </head>
   <body>
-    <h1>Page Not Found</h1>
-    <p>Sorry, we couldn't find the page you were looking for.</p>
   </body>
 </html>
