@@ -10,6 +10,7 @@ function SupervisorReports() {
   });
   const [supervisors, setSupervisors] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [allEmployees, setAllEmployees] = useState([]);
 
   const db = getFirestore();
 
@@ -18,22 +19,26 @@ function SupervisorReports() {
       const querySnapshot = await getDocs(collection(db, "supervisores"));
       const fetchedSupervisors = querySnapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        nombre: doc.data().nombre,
+        tipo: 'supervisor'
       }));
       // Ordenar supervisores alfabéticamente
       fetchedSupervisors.sort((a, b) => a.nombre.localeCompare(b.nombre));
       setSupervisors(fetchedSupervisors);
+      setAllEmployees(prev => [...prev, ...fetchedSupervisors]);
     };
 
     const fetchEmployees = async () => {
       const querySnapshot = await getDocs(collection(db, "empleados"));
       const fetchedEmployees = querySnapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        nombre: doc.data().nombre,
+        tipo: 'empleado'
       }));
       // Ordenar empleados alfabéticamente
       fetchedEmployees.sort((a, b) => a.nombre.localeCompare(b.nombre));
       setEmployees(fetchedEmployees);
+      setAllEmployees(prev => [...prev, ...fetchedEmployees]);
     };
 
     fetchSupervisors();
@@ -95,7 +100,7 @@ function SupervisorReports() {
           value={formValues.employee}
           onChange={handleInputChange}
         >
-          {employees.map(employee => (
+          {allEmployees.map(employee => (
             <MenuItem key={employee.id} value={employee.id}>
               {employee.nombre}
             </MenuItem>
