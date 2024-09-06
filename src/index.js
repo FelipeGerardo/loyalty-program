@@ -6,6 +6,7 @@ import Header from './Header';
 import RecordsPage from './RecordsPage';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import SupervisorReports from './SupervisorReports';
 
 const theme = createTheme();
 
@@ -18,6 +19,7 @@ root.render(
       <Routes>
         <Route path="/inicio" element={<App />} />
         <Route path="/registros" element={<RecordsPage />} />
+        <Route path="/reporte" element={<SupervisorReports />} />
       </Routes>
     </Router>
   </ThemeProvider>
