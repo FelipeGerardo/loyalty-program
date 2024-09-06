@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom'; // Cambia BrowserRouter por HashRouter
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App';
 import Header from './Header';
 import RecordsPage from './RecordsPage';
@@ -18,7 +18,6 @@ root.render(
       <Routes>
         <Route path="/inicio" element={<App />} />
         <Route path="/registros" element={<RecordsPage />} />
-        {/* otras rutas */}
       </Routes>
     </Router>
   </ThemeProvider>
