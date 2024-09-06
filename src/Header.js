@@ -29,7 +29,7 @@ function Header() {
             }
           }}
         >
-          Reportes de clientes
+          SISTEMA DE REGISTROS
         </Typography>
       </Toolbar>
     </StyledAppBar>
