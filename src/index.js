@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App';
 import Header from './Header';
-import RecordsPage from './RecordsPage'; // Importa la nueva página para los registros
+import RecordsPage from './RecordsPage';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -14,10 +14,10 @@ root.render(
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <Header />
-    <Router>
+    <Router basename="/loyalty-program"> {/* Ajusta el basename aquí */}
       <Routes>
-        <Route path="/loyalty-program/inicio" element={<App />} /> {/* Página principal (registro de sugerencias) */}
-        <Route path="/loyalty-program/registros" element={<RecordsPage />} /> {/* Página para ver registros */}
+        <Route path="/inicio" element={<App />} /> {/* Página principal (registro de sugerencias) */}
+        <Route path="/registros" element={<RecordsPage />} /> {/* Página para ver registros */}
       </Routes>
     </Router>
   </ThemeProvider>
