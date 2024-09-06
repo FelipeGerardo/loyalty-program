@@ -29,7 +29,7 @@ function Header() {
             }
           }}
         >
-          Programa de lealtad
+          Reportes de clientes
         </Typography>
       </Toolbar>
     </StyledAppBar>
