@@ -16,8 +16,8 @@ root.render(
     <Header />
     <Router>
       <Routes>
-        <Route path="/inicio" element={<App />} /> {/* Página principal (registro de sugerencias) */}
-        <Route path="/registros" element={<RecordsPage />} /> {/* Página para ver registros */}
+        <Route path="/loyalty-program/inicio" element={<App />} /> {/* Página principal (registro de sugerencias) */}
+        <Route path="/loyalty-program/registros" element={<RecordsPage />} /> {/* Página para ver registros */}
       </Routes>
     </Router>
   </ThemeProvider>
