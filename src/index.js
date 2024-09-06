@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Cambiado 'Switch' por 'Routes'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'; // Cambia BrowserRouter por HashRouter
 import App from './App';
 import Header from './Header';
 import RecordsPage from './RecordsPage';
@@ -14,10 +14,10 @@ root.render(
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <Header />
-    <Router basename="/loyalty-program">
+    <Router>
       <Routes>
-        <Route path="/inicio" element={<App />} />          {/* Cambiado 'component' por 'element' */}
-        <Route path="/registros" element={<RecordsPage />} /> {/* Cambiado 'component' por 'element' */}
+        <Route path="/inicio" element={<App />} />
+        <Route path="/registros" element={<RecordsPage />} />
         {/* otras rutas */}
       </Routes>
     </Router>
