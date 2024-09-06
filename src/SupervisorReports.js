@@ -1,102 +1,123 @@
 import React, { useState, useEffect } from 'react';
-import { getFirestore } from 'firebase/firestore';
-import { collection, getDocs, addDoc, Timestamp } from "firebase/firestore";
-import { TextField, Select, MenuItem, Button } from '@mui/material';
+import { Button, Container, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { getFirestore, collection, getDocs, addDoc, Timestamp } from 'firebase/firestore';
 
-const SupervisorReports = () => {
-  const [supervisores, setSupervisores] = useState([]);
-  const [empleados, setEmpleados] = useState([]);
-  const [selectedSupervisor, setSelectedSupervisor] = useState('');
-  const [selectedEmpleado, setSelectedEmpleado] = useState('');
-  const [reporte, setReporte] = useState('');
+function SupervisorReports() {
+  const [formValues, setFormValues] = useState({
+    supervisor: '',
+    employee: '',
+    report: ''
+  });
+  const [supervisors, setSupervisors] = useState([]);
+  const [employees, setEmployees] = useState([]);
+
   const db = getFirestore();
-  // Fetch supervisores
-  useEffect(() => {
-    const fetchSupervisores = async () => {
-      const supervisoresCollection = collection(db, 'supervisores');
-      const supervisorSnapshot = await getDocs(supervisoresCollection);
-      const supervisorList = supervisorSnapshot.docs.map(doc => ({
-        id: doc.id, 
-        ...doc.data()
-      }));
-      setSupervisores(supervisorList);
-    };
-    fetchSupervisores();
-  }, []);
 
-  // Fetch empleados
   useEffect(() => {
-    const fetchEmpleados = async () => {
-      const empleadosCollection = collection(db, 'empleados');
-      const empleadoSnapshot = await getDocs(empleadosCollection);
-      const empleadoList = empleadoSnapshot.docs.map(doc => ({
+    const fetchSupervisors = async () => {
+      const querySnapshot = await getDocs(collection(db, "supervisores"));
+      const fetchedSupervisors = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
-      setEmpleados(empleadoList);
+      // Ordenar supervisores alfabéticamente
+      fetchedSupervisors.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      setSupervisors(fetchedSupervisors);
     };
-    fetchEmpleados();
-  }, []);
 
-  // Guardar reporte
-  const handleSubmit = async () => {
-    if (!selectedSupervisor || !selectedEmpleado || !reporte) {
-      alert('Por favor, completa todos los campos');
+    const fetchEmployees = async () => {
+      const querySnapshot = await getDocs(collection(db, "empleados"));
+      const fetchedEmployees = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      // Ordenar empleados alfabéticamente
+      fetchedEmployees.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      setEmployees(fetchedEmployees);
+    };
+
+    fetchSupervisors();
+    fetchEmployees();
+  }, [db]);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormValues(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const saveReport = async () => {
+    if (!formValues.supervisor || !formValues.employee || !formValues.report) {
+      alert("Por favor, completa todos los campos");
       return;
     }
 
-    await addDoc(collection(db, 'reportesSupervisores'), {
-      supervisorId: selectedSupervisor,
-      empleadoId: selectedEmpleado,
-      reporte: reporte,
-      fecha: Timestamp.now()
+    await addDoc(collection(db, "reportesSupervisores"), {
+      supervisorId: formValues.supervisor,
+      employeeId: formValues.employee,
+      report: formValues.report,
+      date: Timestamp.now() // Fecha y hora de Firebase
     });
+    alert("Reporte registrado :D");
 
     // Limpiar los campos
-    setSelectedSupervisor('');
-    setSelectedEmpleado('');
-    setReporte('');
+    setFormValues({
+      supervisor: '',
+      employee: '',
+      report: ''
+    });
   };
 
   return (
-    <div>
-      <Select
-        value={selectedSupervisor}
-        onChange={(e) => setSelectedSupervisor(e.target.value)}
-        displayEmpty
-      >
-        <MenuItem value="" disabled>Seleccionar Supervisor</MenuItem>
-        {supervisores.map(supervisor => (
-          <MenuItem key={supervisor.id} value={supervisor.id}>
-            {supervisor.nombre}
-          </MenuItem>
-        ))}
-      </Select>
+    <Container maxWidth="md">
+      <h2>Registrar Reporte del Supervisor</h2>
+      <FormControl fullWidth sx={{ paddingBottom: '15px' }}>
+        <InputLabel>Supervisor</InputLabel>
+        <Select
+          name="supervisor"
+          value={formValues.supervisor}
+          onChange={handleInputChange}
+        >
+          {supervisors.map(supervisor => (
+            <MenuItem key={supervisor.id} value={supervisor.id}>
+              {supervisor.nombre}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
-      <Select
-        value={selectedEmpleado}
-        onChange={(e) => setSelectedEmpleado(e.target.value)}
-        displayEmpty
-      >
-        <MenuItem value="" disabled>Seleccionar Empleado</MenuItem>
-        {empleados.map(empleado => (
-          <MenuItem key={empleado.id} value={empleado.id}>
-            {empleado.nombre}
-          </MenuItem>
-        ))}
-      </Select>
+      <FormControl fullWidth sx={{ paddingBottom: '15px' }}>
+        <InputLabel>Empleado</InputLabel>
+        <Select
+          name="employee"
+          value={formValues.employee}
+          onChange={handleInputChange}
+        >
+          {employees.map(employee => (
+            <MenuItem key={employee.id} value={employee.id}>
+              {employee.nombre}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       <TextField
         label="Reporte"
-        value={reporte}
-        onChange={(e) => setReporte(e.target.value)}
+        name="report"
+        value={formValues.report}
+        onChange={handleInputChange}
+        fullWidth
         multiline
-        rows={4}
+        sx={{ paddingBottom: '15px' }}
       />
 
-      <Button onClick={handleSubmit}>Enviar Reporte</Button>
-    </div>
+      <Button variant="contained" color="primary" onClick={saveReport}>
+        Registrar Reporte
+      </Button>
+    </Container>
   );
-};
+}
 
 export default SupervisorReports;
